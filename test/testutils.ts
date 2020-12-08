@@ -1,3 +1,5 @@
+import { BrokerPayload, createHandshake } from '../src/broker/events'
+
 /**
  * A convenience function to select through shadow root. Equivalent to channing`element.shadowRoot?.querySelector(selector)`
  * @param {HTMLElement} el target element
@@ -73,4 +75,18 @@ export function slottedElement<T extends Element>(el: HTMLElement, selector: str
   const element = slottedElements(el, selector)[0]
   if (element) return element as T
   throw Error(`unable to resolve assigned element for [${selector}] from ${el.tagName}.`)
+}
+
+
+export function dispatch(el: HTMLElement, detail: BrokerPayload) {
+  let event = createHandshake(detail)
+  el.dispatchEvent(event)
+  return event
+}
+
+export function addChild(id: string='*', parent: HTMLElement = window.document.body): HTMLElement {
+  let el = window.document.createElement('div')
+  el.id = id
+  parent.appendChild(el)
+  return el
 }
